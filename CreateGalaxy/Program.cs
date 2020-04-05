@@ -52,7 +52,6 @@ namespace Galaxy
                             galaxyEntityList[i].Y,
                             galaxyEntityList[i].Z,
                             galaxyEntityList[i].isMonster,
-                          //  galaxyEntityList[i].isHabitable,
                             // If entity is a monster, then its not habitable. Reverse is true.
                             galaxyEntityList[i].isHabitable = !galaxyEntityList[i].isMonster ? true : false,
                             galaxyEntityList[i].surfaceArea

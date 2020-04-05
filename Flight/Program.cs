@@ -94,7 +94,6 @@ namespace GalaxyTravel
             routes.Add(new FlightPlan() { Objects = new List<Planet>() });
             routes[0].Objects.Add(nearestObjects[0]); //Add homeworld as my starting point for my route
 
-
             int loop = 0;
             try
             {
