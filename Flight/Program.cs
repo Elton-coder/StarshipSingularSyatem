@@ -39,6 +39,7 @@ namespace GalaxyTravel
             public bool IsHabitable { get; set; }
             public int SurfaceArea { get; set; }
             public bool IsColonized { get; set; }
+          
         }
 
         public class FlightPlan //Results of FlightPlot will be stored here and print to file
@@ -50,6 +51,7 @@ namespace GalaxyTravel
 
             public double TimeTakenToColonizeLastPlanet { get; set; }
         }
+        //Flightplot can also be a method of flightplan
 
         public class FlightPlot //To find the closest habitale planets
         {
@@ -89,8 +91,7 @@ namespace GalaxyTravel
 
             objectsInSpaceList.ToList()
                 .ForEach(x => x.Distance = CalculateDistance(objectsInSpaceList[0].X, objectsInSpaceList[0].Y, objectsInSpaceList[0].Z, x.X, x.Y, x.Z)); //Populate the distance to every other planet in the universe from the current one
-            var nearestObjects = objectsInSpaceList.OrderBy(x => x.Distance).ToList();  //.Where(x => x.Habbitable == true && x.Planet == true && x.Controlled == false)
-
+            var nearestObjects = objectsInSpaceList.OrderBy(x => x.Distance).ToList(); 
             routes.Add(new FlightPlan() { Objects = new List<Planet>() });
             routes[0].Objects.Add(nearestObjects[0]); //Add homeworld as my starting point for my route
 
@@ -123,13 +124,14 @@ namespace GalaxyTravel
 
                     writer.WriteLine(
                         string.Format(" Time : {0} hours, Colonized : {1} million square kilometers, Colonized a total of {2} planets",
-                        (routes[loop].Time / 3600),//24h Hour period
+                        (routes[loop].Time /3600),//24h Hour period 86400/3600 = 24 hours
                         routes[loop].TotalConquredSpace,
                         routes[loop].TotalPlanetsColonized
                         ));
                 }
             }
             catch (FileNotFoundException e)
+
             {
                 Console.WriteLine($"The file was not found: '{e}'");
             }
@@ -159,13 +161,13 @@ namespace GalaxyTravel
                 return 0;
             }
         }
-
+        //Given . More than 50 %, 0.043 seconds per square million km???
         static FlightPlan ColonisePlanet(FlightPlan CurrentFlightPlan, Planet PlanetToColonise)
         {
 
             int moreThanHalfOfArea = (PlanetToColonise.SurfaceArea / 2) + 1; //In order to inhabit a planet, you have to colonize more than 50% of its surface.
             double timeTakenToColonize = moreThanHalfOfArea * 0.043;    //time = distance / speed. We assume 0.043 per million square km. Per square km has some challenges 
-            if ((CurrentFlightPlan.Time + timeTakenToColonize) < 86400)
+            if ((CurrentFlightPlan.Time + timeTakenToColonize) < 86400) //86400 Second (s)	=	24 Hour (h)
             {
                 CurrentFlightPlan.Time += timeTakenToColonize;
                 CurrentFlightPlan.TotalConquredSpace += moreThanHalfOfArea;
@@ -177,6 +179,7 @@ namespace GalaxyTravel
 
             return CurrentFlightPlan;
         }
+        //Time between immediate neighbour = 10 mins, if monster double the time
         static FlightPlot FindClosestHabitablePlanet(List<Planet> OrderedPlanetList, FlightPlan route)
         {
             double speed = OrderedPlanetList[1].Distance / 600; //Speed = distance/time. 10 minutes to the immediate neighbour
